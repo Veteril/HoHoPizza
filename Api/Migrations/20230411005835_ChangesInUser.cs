@@ -4,7 +4,7 @@
 
 namespace API.Migrations
 {
-    public partial class Initial_Create : Migration
+    public partial class ChangesInUser : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
