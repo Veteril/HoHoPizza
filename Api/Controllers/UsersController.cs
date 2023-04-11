@@ -18,10 +18,16 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public  async Task<ActionResult<IEnumerable<User>>> GetAll()
+        public async Task<ActionResult<IEnumerable<User>>> GetAll()
         {
-            var actual = await _databaseContext.Users.ToListAsync();
-            return Ok(actual);
+            return await _databaseContext.Users.ToListAsync();
+        }
+
+        [HttpGet("{id}")]
+        
+        public async Task<ActionResult<User>> GetUser(int id)
+        {
+            return await _databaseContext.Users.FindAsync(id);
         }
     }
 }

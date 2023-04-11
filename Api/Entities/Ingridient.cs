@@ -2,11 +2,11 @@
 {
     public class Ingridient
     {
-        public int id { get; set; }
+        public int Id { get; set; }
 
-        public string name { get; set; }
+        public string Name { get; set; }
 
-        public float weight { get; set; }
+        public float Weight { get; set; }
 
     }
 }

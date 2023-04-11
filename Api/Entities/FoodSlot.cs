@@ -2,16 +2,17 @@
 {
     public class FoodSlot
     {
-        public int id {  get; set; }
+        public int Id {  get; set; }
 
-        public string name { get; set; }
+        public string Name { get; set; }
 
-        public float price { get; set; }
+        public float Price { get; set; }
 
-        public string imageUrl { get; set; }
+        public string ImageUrl { get; set; }
 
-        public float weight { get; set; }
+        public float Weight { get; set; }
 
-        public int ingridientId { get; set; }
+        public int IngridientId { get; set; }
+        
     }
 }
