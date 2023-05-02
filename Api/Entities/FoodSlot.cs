@@ -12,7 +12,8 @@
 
         public float Weight { get; set; }
 
-        public int IngridientId { get; set; }
-        
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
+        public ICollection<ShoppingCart> ShoppingCarts { get; set; }
     }
 }

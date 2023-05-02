@@ -1,5 +1,11 @@
+using API.Interfaces;
 using API.Persistanse;
+using API.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using API.Extensions;
 
 namespace API
 {
@@ -13,6 +19,9 @@ namespace API
             builder.Services.AddDbContext<DatabaseContext>(options =>
            options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
             builder.Services.AddCors();
+            builder.Services.AddScoped<ITokenService, TokenService>();
+            builder.Services.AddScoped<MoneyService>();
+            builder.Services.AddIdentityServices(builder.Configuration);
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -31,6 +40,7 @@ namespace API
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 

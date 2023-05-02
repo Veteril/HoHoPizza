@@ -8,8 +8,14 @@
 
         public string Password { get; set; }
 
+        public string PasswordSalt { get; set; }
+
         public float Money { get; set; }
 
         public bool IsAdmin { get; set; }
+
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
+        public ICollection<Order> Orders { get; }
     }
 }

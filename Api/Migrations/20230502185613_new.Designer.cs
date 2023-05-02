@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20230411005835_ChangesInUser")]
-    partial class ChangesInUser
+    [Migration("20230502185613_new")]
+    partial class @new
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -34,9 +34,6 @@ namespace API.Migrations
                     b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("IngridientId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -94,6 +91,10 @@ namespace API.Migrations
 
                     b.HasIndex("OrderStatusId");
 
+                    b.HasIndex("PaymentTypeId");
+
+                    b.HasIndex("UserId");
+
                     b.ToTable("Orders");
                 });
 
@@ -116,8 +117,11 @@ namespace API.Migrations
 
             modelBuilder.Entity("API.Entities.PaymentType", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -139,13 +143,17 @@ namespace API.Migrations
                     b.Property<float>("Count")
                         .HasColumnType("real");
 
-                    b.Property<int>("FoodId")
+                    b.Property<int>("FoodSlotId")
                         .HasColumnType("int");
 
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FoodSlotId");
+
+                    b.HasIndex("OrderId");
 
                     b.ToTable("ShoppingCarts");
                 });
@@ -168,6 +176,10 @@ namespace API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PasswordSalt")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -185,7 +197,57 @@ namespace API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("API.Entities.PaymentType", "PaymentType")
+                        .WithMany()
+                        .HasForeignKey("PaymentTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("API.Entities.User", "User")
+                        .WithMany("Orders")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("OrderStatus");
+
+                    b.Navigation("PaymentType");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("API.Entities.ShoppingCart", b =>
+                {
+                    b.HasOne("API.Entities.FoodSlot", "FoodSlot")
+                        .WithMany("ShoppingCarts")
+                        .HasForeignKey("FoodSlotId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("API.Entities.Order", "Order")
+                        .WithMany("ShoppingCarts")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FoodSlot");
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("API.Entities.FoodSlot", b =>
+                {
+                    b.Navigation("ShoppingCarts");
+                });
+
+            modelBuilder.Entity("API.Entities.Order", b =>
+                {
+                    b.Navigation("ShoppingCarts");
+                });
+
+            modelBuilder.Entity("API.Entities.User", b =>
+                {
+                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }
