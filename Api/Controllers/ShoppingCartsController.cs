@@ -52,7 +52,7 @@ namespace API.Controllers
             await _databaseContext.AddAsync(shoppingCart);
             var _linescount = await _databaseContext.SaveChangesAsync();
 
-            return Ok(shoppingCart);
+            return Ok();
         }
 
         [HttpGet]

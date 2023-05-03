@@ -17,8 +17,9 @@ namespace API
 
             // Add services to the container.
             builder.Services.AddDbContext<DatabaseContext>(options =>
-           options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
             builder.Services.AddCors();
+            builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
             builder.Services.AddScoped<ITokenService, TokenService>();
             builder.Services.AddScoped<MoneyService>();
             builder.Services.AddIdentityServices(builder.Configuration);

@@ -15,5 +15,6 @@ namespace API.Persistanse
         public DbSet<OrderStatus> OrderStatuses { get; set; }
         public DbSet<PaymentType> PaymentTypes { get; set; }
         public DbSet<ShoppingCart> ShoppingCarts { get; set;}
+        public DbSet<IngridientComposition> IngridientCompositions { get; set; }
     }
 }

@@ -25,7 +25,7 @@ namespace API.Controllers
         }
 
         [HttpPost("signin")]
-        public async Task<ActionResult<UserDto>> SignInUser(UserDtoRegister userDto)
+        public async Task<ActionResult<UserDtoToken>> SignInUser(UserDtoRegister userDto)
         {
             var user = await _databaseContext.Users.SingleOrDefaultAsync(x => x.UserName == userDto.UserName);
             if (user == null) return Unauthorized();
@@ -35,7 +35,7 @@ namespace API.Controllers
             if (computeHash != user.Password)
                 return Unauthorized();
 
-            return new UserDto
+            return new UserDtoToken
             {
                 UserName = user.UserName,
                 Token = _tokenService.GetToken(user)
@@ -43,7 +43,7 @@ namespace API.Controllers
         }
 
         [HttpPost("signup")]
-        public async Task<ActionResult<UserDto>> SignUpUser(UserDtoRegister userDto)
+        public async Task<ActionResult<UserDtoToken>> SignUpUser(UserDtoRegister userDto)
         {
             if (await _databaseContext.Users.AnyAsync(x => x.UserName == userDto.UserName))
                 return BadRequest("This username is already taken");
@@ -62,7 +62,7 @@ namespace API.Controllers
             _databaseContext.Users.Add(user);
             await _databaseContext.SaveChangesAsync();
 
-            return new UserDto
+            return new UserDtoToken
             {
                 UserName = user.UserName,
                 Token = _tokenService.GetToken(user)
