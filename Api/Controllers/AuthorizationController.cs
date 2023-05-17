@@ -3,6 +3,7 @@ using API.Entities;
 using API.Interfaces;
 using API.Persistanse;
 using API.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class AuthorizationController : ControllerBase
     {
         private readonly ITokenService _tokenService;
@@ -45,14 +47,15 @@ namespace API.Controllers
         [HttpPost("signup")]
         public async Task<ActionResult<UserDtoToken>> SignUpUser(UserDtoRegister userDto)
         {
-            if (await _databaseContext.Users.AnyAsync(x => x.UserName == userDto.UserName))
-                return BadRequest("This username is already taken");
+            if (await _databaseContext.Users.AnyAsync(x => x.UserName == userDto.UserName || x.UserPhone == userDto.UserPhone))
+                return BadRequest("This username or phone number is already taken");
 
             using var hmac = new HMACSHA512();
 
             var user = new User()
             {
                 UserName = userDto.UserName,
+                UserPhone = userDto.UserPhone,
                 Password = Convert.ToBase64String(hmac.ComputeHash(Encoding.UTF8.GetBytes(userDto.Password))),
                 PasswordSalt = Convert.ToBase64String(hmac.Key),
                 IsAdmin = false,

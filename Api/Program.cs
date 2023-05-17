@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using API.Extensions;
+using Microsoft.OpenApi.Models;
 
 namespace API
 {
@@ -21,8 +22,9 @@ namespace API
             builder.Services.AddCors();
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
             builder.Services.AddScoped<ITokenService, TokenService>();
-            builder.Services.AddScoped<MoneyService>();
+            builder.Services.AddScoped<UserService>();
             builder.Services.AddIdentityServices(builder.Configuration);
+            builder.Services.AddSwaggerServices(builder.Configuration);
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -43,7 +45,6 @@ namespace API
 
             app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapControllers();
 
